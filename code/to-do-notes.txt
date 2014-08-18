@@ -1,0 +1,82 @@
+There are still negative fluxes for a couple bands in the SED, esp for the larger apertures around Y1.
+Thought SExtractor accounted for background--or am I missing something?
+
+Looks like we have images in e-/sec. How do we get to Jy? There seems to be an IRAF routine?
+Except that seems to be contradicted by following paragraph.
+
+m_AB = ZP - 2.512 log10(flux)
+then find a conversion between Jy and m_AB
+F[uJy] = 10**-(m_AB - 23.9)/2.512
+
+so then F[uJy] = flux*10**(-2.512(ZP-23.9))
+Make array of ZP, then multiply out
+
+re-run SExtractor
+
+# =====
+
+plot Laporte flux values on top of my flux values
+compute per-band correction factor for an isolated star
+	assume all flux is contained at 2"
+	correct from .5" to 2" by dividing by flux factor obtained from star COG
+DONE
+	
+make ASCII catalog of all objects in the F160 band, with corrected fluxes in all bands.
+
+# =====
+
+select high-z galaxies, use ascii output files from eazy to plot SEDs for z > 3 cat
+panels: SED, redshift dist. (computed from chi2), image cutout in F160, F814
+Look at other sources (Zheng et al, Atek et al), cited in Laporte
+
+./eazy -p zphot.param -z zphot.zeropoint # uses new zero-points
+
+Look for catalog of spectroscopic redshifts for A2744
+
+F_lambda = F_nu * (lambda/5500A)^-2
+
+# =====
+
+list F160 magnitude on top of ax3
+
+plot tempa_z
+
+replace err_full with err_cat
+
+# =====
+
+look for empty aperture errors email (July 15 thread)
+
+for each band, define an empty_aperture error equal to sig_EA * sqrt(wht.75p()/wht) #wht in central pixel
+#.75p() is weight at 75th percentile (numpy.percentile)
+do all that in phot-sex-all in cat_correct, convert new errors to uJy
+
+# =====
+
+take out K-band and IRAC, scale ACS errors (single-template mode only), see effect on best-fit
+constrain z < ~3, do plotting again
+
+# =====
+
+make a bunch of spectra.param files (each with one template included), for templates with epoch less than 700My (.7Gy)
+change output directory specific to each template
+get chi2 for every fit (constrained within 99% bounds), plot each fit w/ transparency according to chi2 (chi2 has to be less than (1, 4, 9) above chi2 minimum)
+
+# =====
+
+figure for paper
+Panel 1: log p(z) with new K-band
+Panel 2: SED with error bars (for favored z~8 peak and disfavored z~2 peak, indicate which is which)
+Panel 3: range of models that fit the SED (ax2 from modelfit)
+
+# =====
+
+move panel 3 to separate figure
+make panel 1 and panel 2 each square
+linear wavelength units in SEDs
+fix Angstrom label
+extend SED y axis to negative, put light line at 0
+remove individual panel labels
+make observed photometry a more visible color
+plot template photometry from obs_sed
+make sure LaTeX font renders correctly
